@@ -54,7 +54,7 @@ class DataPrep:
     # Criaremos uma coluna que se chamará FamilySize que mostrará a quantidade 
     # de famílias, de cada passaseiros, que sobreviveram.
     def criar_variaveis(self) -> None:
-        self.data['FamilySize'] = self.data['SibSp'] + self.data['Parch']
+        self.data['FamilySize'] = self.data['SibSp'] + self.data['Parch'] + 1
     
     # vamos treinar o nosso algoritmo e testá-lo
     def separar_treino_teste(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
