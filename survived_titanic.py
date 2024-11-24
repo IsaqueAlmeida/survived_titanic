@@ -34,7 +34,7 @@ class DataPrep:
     
     # Vamor tratar das variáveis de categorias, as transformando em true ou false (bool)
     def tratar_variaveis_categorias(self) -> None:
-        sexo = {'male': 1, 'female': 0}
+        sexo = {'male': 0, 'female': 1}
         self.data['Sex'] = self.data['Sex'].map(sexo)
         embarked_dummies = pd.get_dummies(self.data['Embarked'])
         self.data = pd.concat([self.data, embarked_dummies], axis=1)
