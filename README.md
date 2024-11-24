@@ -83,14 +83,14 @@ Este projeto foi desenvolvido para prever a sobrevivência de passageiros do Tit
 
 1. Carregue os dados:
    ```python
-   df = pd.read_csv("titanic.csv")
+   df = pd.read_csv("train_data_titanic.csv")
 
 2. Instancie a classe *DataPrep*:
    ```python
    prep = DataPrep(data=df)
 
 3. Prepare os dados:
-   ```python
+   ```python 
    treino, teste = prep.preparar_dados()
 
 4. O conjunto *treino* estará pronto para treinar um modelo de aprendizado de máquina, e o *teste* será usado para avaliar a performance do modelo
