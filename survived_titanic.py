@@ -36,7 +36,9 @@ class DataPrep:
     def tratar_variaveis_categorias(self) -> None:
         sexo = {'male': 0, 'female': 1}
         self.data['Sex'] = self.data['Sex'].map(sexo)
-        embarked_dummies = pd.get_dummies(self.data['Embarked'])
+        embarked_dummies = pd.get_dummies(self.data['Embarked'],
+                                          prefix='Embarked')
+        embarked_dummies.index = self.data.index
         self.data = pd.concat([self.data, embarked_dummies], axis=1)
         self.data.drop(columns=['Embarked'], inplace=True) # Remover após criar as dummies
     
@@ -48,7 +50,8 @@ class DataPrep:
 
         scaler = MinMaxScaler()
         variaveis = scaler.fit_transform(variaveis)
-        variaveis = pd.DataFrame(variaveis, columns=var_cols)
+        variaveis = pd.DataFrame(variaveis, columns=var_cols,
+                                 index=self.data.index)
         self.data = pd.concat([variaveis, resposta], axis=1)
     
     # Criaremos uma coluna que se chamará FamilySize que mostrará a quantidade 
