@@ -12,14 +12,16 @@ from typing import Tuple
 
 class DataPrep:
     def __init__(self, data: pd.DataFrame) -> None:
+        # Inicializa a classe DataPrep com a base de dados do Titanic
         self.data = data
 
     def remover_colunas(self) -> None:
+        # Remove as variáveis que não serão utilizadas pelo modelo
         remocao_colunas = [
             'PassengerId',
             'Ticket',
             'Name',
-            'Cabin',
+            'Cabin',  # variável com muitos dados faltantes
             'Embarked',
             'SibSp',
             'Parch'
@@ -28,19 +30,30 @@ class DataPrep:
 
     # Iremos fazer o tratamento de dados que são nulos
     def tratar_dados_nulos(self) -> None:
+        "Faz o tratamento das variáveis nulas"
+        # Imputar mediana das idades por classe e sexo
         self.data['Age'] = self.data.groupby(['Pclass', 'Sex'])['Age'] \
             .apply(lambda x: x.fillna(x.median()))
+        
+        # Imputar local de embarque
         self.data['Embarked'] = self.data['Embarked'].fillna('S')
 
-    # Vamor tratar das variáveis de categorias, as transformando em true ou false (bool)
+    # Vamor tratar das variáveis de categorias, as transformando em true ou
+    # false (bool)
     def tratar_variaveis_categorias(self) -> None:
+        "Faz o tratamento das variáveis categóricas"
+        # Label Encoding da variável Sex
         sexo = {'male': 0, 'female': 1}
         self.data['Sex'] = self.data['Sex'].map(sexo)
         embarked_dummies = pd.get_dummies(self.data['Embarked'],
                                           prefix='Embarked')
-        embarked_dummies.index = self.data.index
+
+        # One Hot Encoding da variável Embarked
+        embarked_dummies = pd.get_dummies(self.data['Embarked'])
         self.data = pd.concat([self.data, embarked_dummies], axis=1)
-        self.data.drop(columns=['Embarked'], inplace=True) # Remover após criar as dummies
+
+        # Remover após criar as dummies
+        self.data.drop(columns=['Embarked'], inplace=True)
 
     # Iremos normalizar os dados utilizando o MinMaxScaler
     def normalizar_dados(self) -> None:
@@ -50,11 +63,11 @@ class DataPrep:
 
         scaler = MinMaxScaler()
         variaveis = scaler.fit_transform(variaveis)
-        variaveis = pd.DataFrame(variaveis, columns=var_cols,
-                                 index=self.data.index)
+        variaveis = pd.DataFrame(variaveis, columns=var_cols)
+
         self.data = pd.concat([variaveis, resposta], axis=1)
 
-    # Criaremos uma coluna que se chamará FamilySize que mostrará a quantidade 
+    # Criaremos uma coluna que se chamará FamilySize que mostrará a quantidade
     # de famílias, de cada passaseiros, que sobreviveram.
     def criar_variaveis(self) -> None:
         self.data['FamilySize'] = self.data['SibSp'] + self.data['Parch'] + 1
